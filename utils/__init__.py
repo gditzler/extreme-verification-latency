@@ -22,19 +22,4 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-
-
-class LevelIW(): 
-    def __init__(self, 
-                 classifier, 
-                 T, 
-                 method): 
-        """
-        """
-        self.classifier = classifier 
-        self.T = T
-    
-    def run(self, Xt, Yt, Ut): 
-        """
-        """
-        self.classifier
+from .exptools import config_parser

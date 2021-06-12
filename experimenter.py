@@ -23,18 +23,22 @@
 # SOFTWARE.
 
 
+import os 
+import pandas as pd
+from utils import config_parser
+from models import APT, ComposeV1, ComposeV2, FastCompose, LevelIW, MClassification, Scargc
 
-class LevelIW(): 
-    def __init__(self, 
-                 classifier, 
-                 T, 
-                 method): 
-        """
-        """
-        self.classifier = classifier 
-        self.T = T
-    
-    def run(self, Xt, Yt, Ut): 
-        """
-        """
-        self.classifier
+# run the main program 
+if __name__ == '__main__': 
+    parser = config_parser()
+    args = parser.parse_args()
+
+    # make the result directory if it does not exist 
+    if not os.path.isdir('results/'): 
+        os.mkdir('results/')
+
+    # load the config file and make sure it exists. 
+    try: 
+        df = pd.read_csv(args.config)
+    except: 
+        raise(FileExistsError('Config file %s does not exist' % args.config))

@@ -23,18 +23,25 @@
 # SOFTWARE.
 
 
+import argparse
 
-class LevelIW(): 
-    def __init__(self, 
-                 classifier, 
-                 T, 
-                 method): 
-        """
-        """
-        self.classifier = classifier 
-        self.T = T
-    
-    def run(self, Xt, Yt, Ut): 
-        """
-        """
-        self.classifier
+
+def config_parser():
+    '''build the parser for the main experiment script. 
+    '''
+    parser = argparse.ArgumentParser()
+    # number of trials 
+    parser.add_argument('-r',
+                        '--runs',
+                        type=int, 
+                        default=5, 
+                        help='number of trials to runs')
+    # type of EVL 
+    parser.add_argument('-c',
+                        '--config',
+                        type=str, 
+                        required=True,  
+                        help='experiment config file')
+    return parser
+
+
