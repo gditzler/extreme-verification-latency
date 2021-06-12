@@ -93,4 +93,5 @@ class APT():
             # step 5: Compute instance-to-exemplar correspondence
             # step 6: Pass the cluster assignment from the example to their 
             # assigned instances to achieve instance-to-cluster assignment 
+            self.cluster = KMeans(Xt, init=self.class_cluster.cluster_centers_)
             # step 7: pass the class of an example  
