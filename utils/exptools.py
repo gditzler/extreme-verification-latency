@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-
+import pandas as pd 
 import argparse
 
 
@@ -43,5 +43,16 @@ def config_parser():
                         required=True,  
                         help='experiment config file')
     return parser
+
+
+def print_config(df:pd.DataFrame): 
+    """print out the experiment configuration
+    """
+    print('>> Experiment Information >>')
+    for key in df.keys(): 
+        print(' - %s: %s ' % (key, str(df[key][0])))
+    print('\n\n')
+
+
 
 
