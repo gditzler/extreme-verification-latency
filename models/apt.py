@@ -25,7 +25,7 @@
 
 
 import numpy as np 
-import scipy as sp
+from scipy import stats
 import tqdm
 
 from sklearn.cluster import KMeans
@@ -33,40 +33,41 @@ from sklearn.cluster import KMeans
 
 class APT(): 
     def __init__(self, 
-                 classifier, 
                  Xinit,
                  Yinit,
-                 Kclusters,   
-                 T, 
-                 method): 
+                 Kclusters:int=10,
+                 resample:bool=True,   
+                 T:int=50): 
         """
         """
         # total number of times we are going to run an experiment with .run()
         self.T = T 
         # number of unique classes in the data 
         self.nclasses = len(np.unique(Yinit))
-        # set the intial data and clusters 
+        # set the intial data 
         self.Xinit = Xinit
-        self.Yinit = Yinit 
+        self.Yinit = Yinit
+        # intialize the cluster model  
         self.Kclusers = Kclusters
-        self.class_cluster = np.zeros((self.nclasses,))
-        self.__initialize()
+        self.class_cluster = np.zeros((self.Kclusers,))
         self.M = len(Yinit)
+        self._initialize()
         
-    def __initialize(self): 
+    def _initialize(self): 
         """
         """
         # run the clustering algorithm on the training data then find the cluster 
         # assignment for each of the samples in the training data 
         self.cluster = KMeans(n_clusters=self.Kclusers).fit(self.Xinit)
-        labels = self.class_cluster.predict(self.Xinit)
+        labels = self.cluster.predict(self.Xinit)
 
         # for each of the clusters, find the labels of the data samples in the clusters
         # then look at the labels from the initially labeled data that are in the same
         # cluster. assign the cluster the label of the most frequent class. 
         for i in range(self.Kclusers): 
             yhat = self.Yinit[labels==i]
-            self.class_cluster[i] = sp.stats.mode(yhat)
+            mode_val,_ = stats.mode(yhat)
+            self.class_cluster[i] = mode_val[0]
 
 
     

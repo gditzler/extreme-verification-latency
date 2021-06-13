@@ -23,3 +23,4 @@
 # SOFTWARE.
 
 from .exptools import config_parser
+from .exptools import print_config

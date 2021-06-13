@@ -25,7 +25,9 @@
 
 import os 
 import pandas as pd
-from utils import config_parser
+import numpy as np 
+from data import stream_file_loader, generate_stream
+from utils import config_parser, print_config
 from models import APT, ComposeV1, ComposeV2, FastCompose, LevelIW, MClassification, Scargc
 
 # run the main program 
@@ -39,6 +41,23 @@ if __name__ == '__main__':
 
     # load the config file and make sure it exists. 
     try: 
-        df = pd.read_csv(args.config)
+        df_config = pd.read_csv(args.config)
     except: 
         raise(FileExistsError('Config file %s does not exist' % args.config))
+    print_config(df_config)
+
+    # read in the datastream
+    Xinit, Yinit, Xt, Yt = stream_file_loader(experiment_name='1CDT', chunk_size=250)
+
+    T = np.min([len(Xt), df_config['T'][0]])
+    
+    if df_config['model'][0] == 'apt': 
+        mdl = APT(classifier=df_config['base'][0], 
+                  Xinit=Xinit, 
+                  Yinit=Yinit, 
+                  Kclusters=df_config['kcluster'][0], 
+                  T=T)
+    else: 
+        raise(ValueError('Unknown model: %s' % df_config['model'][0]))
+
+

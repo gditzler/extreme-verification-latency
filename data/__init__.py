@@ -1,3 +1,5 @@
 #!/usr/bin/env python 
 
-from .streams import load_stream
+from .streams import generate_stream
+from .streams import stream_file_loader
+
