@@ -26,7 +26,7 @@
 
 import numpy as np 
 from scipy import stats
-import tqdm
+from tqdm import tqdm
 
 from sklearn.cluster import KMeans
 
@@ -44,6 +44,8 @@ class APT():
         self.T = T 
         # number of unique classes in the data 
         self.nclasses = len(np.unique(Yinit))
+        #
+        self.resample=resample
         # set the intial data 
         self.Xinit = Xinit
         self.Yinit = Yinit
@@ -71,28 +73,34 @@ class APT():
 
 
     
-    def run(self, Xts, Yts, Uts): 
+    def run(self, Xts, Yts): 
         """
         """
+        self.T = np.min([self.T, len(Xts)])
+        N = len(Xts[0])
         
-
-        for t in tqdm(self.T): 
-            Xt = Xts[t]
-            Yt = Yts[t]
-            Ut = Uts[t]
-            N = len(Xt)
-
-            # check lens of the data 
-            if self.M != N: 
-                raise ValueError('N and M must be the same size')
+        # check lens of the data 
+        if self.M != N: 
+            raise ValueError('N and M must be the same size')
+        
+        # run the experiment 
+        for t in range(self.T-1):
+            # get the data from time T and resample if required 
+            Xt, Yt = Xts[t], Yts[t]
+            if self.resample: 
+                ii = np.random.randint(0, N, N)
+                Xt, Yt = Xt[ii], Yt[ii]
             
             # step 4: associate each new instance to one previous example
             sample_assignment = np.zeros((N,))
             for n in range(N): 
-                sample_assignment[n] = np.argmin(np.linalg(Xt[n] - self.Xinit, axis=1))
-
+                sample_assignment[n] = int(np.argmin(np.linalg.norm(Xt[n] - self.Xinit, axis=1)))
+            
             # step 5: Compute instance-to-exemplar correspondence
+            #yhat = Yt[sample_assignment]
+            print(t, len(Yt), len(sample_assignment))
+            print(Yt[sample_assignment[0]])
             # step 6: Pass the cluster assignment from the example to their 
             # assigned instances to achieve instance-to-cluster assignment 
-            self.cluster = KMeans(Xt, init=self.class_cluster.cluster_centers_)
+            self.cluster = KMeans(n_clusters=self.Kclusers, init=self.cluster.cluster_centers_).fit(Xt)
             # step 7: pass the class of an example  

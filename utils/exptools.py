@@ -51,7 +51,6 @@ def print_config(df:pd.DataFrame):
     print('>> Experiment Information >>')
     for key in df.keys(): 
         print(' - %s: %s ' % (key, str(df[key][0])))
-    print('\n\n')
 
 
 

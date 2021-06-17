@@ -30,6 +30,10 @@ from data import stream_file_loader, generate_stream
 from utils import config_parser, print_config
 from models import APT, ComposeV1, ComposeV2, FastCompose, LevelIW, MClassification, Scargc
 
+import warnings
+warnings.filterwarnings("ignore")
+
+
 # run the main program 
 if __name__ == '__main__': 
     parser = config_parser()
@@ -52,12 +56,20 @@ if __name__ == '__main__':
     T = np.min([len(Xt), df_config['T'][0]])
     
     if df_config['model'][0] == 'apt': 
-        mdl = APT(classifier=df_config['base'][0], 
+        mdl = APT(resample=True,
                   Xinit=Xinit, 
                   Yinit=Yinit, 
                   Kclusters=df_config['kcluster'][0], 
                   T=T)
+    elif df_config['model'][0] == 'scargc': 
+        mdl = Scargc(Xinit=Xinit, 
+                     Yinit=Yinit, 
+                     Kclusters=df_config['kcluster'][0], 
+                     maxpool=25,
+                     resample=True)
     else: 
         raise(ValueError('Unknown model: %s' % df_config['model'][0]))
+
+    mdl.run(Xt, Yt)
 
 

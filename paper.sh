@@ -23,5 +23,12 @@
 # SOFTWARE.
 
 
-python experimenter.py --config config/config_example.csv 
+python experimenter.py --config config/config_example.csv &  
+python experimenter.py --config config/config_example.csv & 
+python experimenter.py --config config/config_example.csv & 
+wait 
 
+python experimenter.py --config config/config_example.csv & 
+python experimenter.py --config config/config_example.csv & 
+python experimenter.py --config config/config_example.csv & 
+wait
